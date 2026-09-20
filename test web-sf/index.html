@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>关于我</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* =========================================================
+     使用说明（可删除本段注释）：
+     1. 页面中所有写着【请替换】的文字，都需要你打开 info.txt，
+        把对应内容改成你自己的真实信息。
+     2. 三张写真图片文件名已按你提供的名称写好，无需改动，
+        只要保证图片仍放在同目录下的“我的写真”文件夹里即可。
+     3. 本文件命名为 index.html，请把它放进 D:\test web-sf 根目录，
+        与 face.png、info.txt、我的写真 文件夹保持同级，双击打开即可。
+     ========================================================= */
+
+  :root{
+    --bg: #120f1e;
+    --bg-alt: #1b1730;
+    --yellow: #f4c430;
+    --yellow-soft: #ffe08a;
+    --orange: #ff6a3d;
+    --cream: #f3ecd8;
+    --ink: #0d0b16;
+    --line: #423c6b;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--cream);
+    font-family: "Space Grotesk", "Noto Sans SC", sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ---------- 装饰：背景放射线 ---------- */
+  .sunburst{
+    position: absolute;
+    top: 8%;
+    left: 50%;
+    width: 1400px;
+    height: 1400px;
+    transform: translateX(-50%);
+    background: repeating-conic-gradient(
+      from 0deg,
+      rgba(244,196,48,0.10) 0deg 6deg,
+      transparent 6deg 14deg
+    );
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .scanlines{
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.025) 0px,
+      rgba(255,255,255,0.025) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 24px 60px;
+    text-align: center;
+    z-index: 1;
+  }
+
+  .frame-wrap{
+    position: relative;
+    width: min(320px, 70vw);
+    aspect-ratio: 3/4;
+    padding: 6px;
+    background: linear-gradient(155deg, var(--yellow), var(--orange));
+    clip-path: polygon(28px 0, 100% 0, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0 100%, 0 28px);
+    opacity: 0;
+    animation: rise 0.9s ease-out 0.15s forwards;
+  }
+
+  .frame-wrap img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    background: var(--bg-alt);
+    clip-path: polygon(26px 0, 100% 0, 100% calc(100% - 26px), calc(100% - 26px) 100%, 0 100%, 0 26px);
+  }
+
+  .name{
+    margin: 34px 0 6px;
+    font-size: clamp(2.2rem, 6vw, 3.4rem);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: var(--yellow-soft);
+    opacity: 0;
+    animation: rise 0.9s ease-out 0.35s forwards;
+  }
+
+  .tagline{
+    font-family: "Space Mono", monospace;
+    font-size: 0.95rem;
+    color: var(--cream);
+    opacity: 0;
+    letter-spacing: 0.03em;
+    animation: rise 0.9s ease-out 0.5s forwards;
+  }
+
+  @keyframes rise{
+    from{ opacity: 0; transform: translateY(18px); }
+    to{ opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .frame-wrap, .name, .tagline{ animation: none; opacity: 1; }
+  }
+
+  /* ---------- 装饰：飞船 / 原子 / 星芒 ---------- */
+  .deco{
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .rocket-deco{
+    top: 6%;
+    right: 7%;
+    width: 72px;
+    transform: rotate(-18deg);
+    animation: float 5s ease-in-out infinite;
+  }
+
+  .atom-deco{ width: 58px; }
+  .atom-deco svg{ animation: spin 16s linear infinite; }
+
+  .atom-1{ bottom: 9%; left: 5%; }
+  .atom-2{
+    position: absolute;
+    top: 14px;
+    right: calc(50% - 210px);
+    width: 42px;
+  }
+
+  .star-deco{
+    width: 14px;
+    animation: twinkle 3.2s ease-in-out infinite;
+  }
+  .star-1{ top: 14%; left: 9%; }
+  .star-2{ top: 32%; right: 14%; animation-delay: 1.1s; }
+  .star-3{ top: 60px; left: calc(50% + 180px); animation-delay: 0.6s; }
+
+  @keyframes float{
+    0%, 100%{ transform: rotate(-18deg) translateY(0); }
+    50%{ transform: rotate(-18deg) translateY(-16px); }
+  }
+  @keyframes spin{
+    from{ transform: rotate(0deg); }
+    to{ transform: rotate(360deg); }
+  }
+  @keyframes twinkle{
+    0%, 100%{ opacity: 0.25; }
+    50%{ opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .rocket-deco, .atom-deco svg, .star-deco{ animation: none; }
+  }
+
+  @media (max-width: 760px){
+    .rocket-deco{ width: 50px; top: 3%; right: 4%; }
+    .atom-1{ width: 44px; }
+    .atom-2, .star-3{ display: none; }
+  }
+
+  /* ---------- 信息数据区 ---------- */
+  .info-grid{
+    margin-top: 56px;
+    width: min(720px, 92vw);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .info-item{
+    padding: 20px 18px;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+    text-align: left;
+  }
+  .info-item:nth-child(2n){ border-right: 1px solid var(--line); }
+  .info-item:nth-last-child(-n+2){ border-bottom: 1px solid var(--line); }
+
+  .info-label{
+    font-family: "Space Mono", monospace;
+    font-size: 0.75rem;
+    color: var(--yellow);
+    margin-bottom: 6px;
+  }
+
+  .info-value{
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--cream);
+  }
+
+  .about{
+    margin-top: 44px;
+    max-width: 560px;
+    line-height: 1.9;
+    font-size: 1rem;
+    color: rgba(243,236,216,0.85);
+  }
+
+  .scroll-cue{
+    margin-top: 56px;
+    font-family: "Space Mono", monospace;
+    font-size: 0.8rem;
+    color: var(--yellow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .scroll-cue span{
+    width: 1px;
+    height: 34px;
+    background: linear-gradient(var(--yellow), transparent);
+  }
+
+  /* ---------- 写真区 ---------- */
+  .gallery{
+    position: relative;
+    padding: 100px 24px 120px;
+    background: var(--bg-alt);
+    border-top: 1px solid var(--line);
+    z-index: 1;
+  }
+
+  .gallery-title{
+    text-align: center;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 700;
+    color: var(--yellow-soft);
+    margin: 0 0 8px;
+  }
+
+  .gallery-sub{
+    text-align: center;
+    font-family: "Space Mono", monospace;
+    font-size: 0.8rem;
+    color: rgba(243,236,216,0.6);
+    margin-bottom: 60px;
+  }
+
+  .gallery-grid{
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 36px;
+  }
+
+  .photo-card figure{
+    margin: 0;
+    position: relative;
+  }
+
+  .photo-frame{
+    position: relative;
+    aspect-ratio: 3/4;
+    border: 2px solid var(--yellow);
+  }
+  .photo-frame::before, .photo-frame::after{
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--orange);
+  }
+  .photo-frame::before{ top: -8px; left: -8px; border-right: none; border-bottom: none; }
+  .photo-frame::after{ bottom: -8px; right: -8px; border-left: none; border-top: none; }
+
+  .photo-frame img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(15%) contrast(1.02);
+    transition: filter 0.4s ease, transform 0.4s ease;
+  }
+
+  .photo-card:hover .photo-frame img{
+    filter: grayscale(0%) contrast(1.05);
+    transform: scale(1.03);
+  }
+
+  figcaption{
+    margin-top: 16px;
+    text-align: center;
+    font-family: "Space Mono", monospace;
+    font-size: 0.85rem;
+    color: var(--cream);
+  }
+
+  @media (max-width: 760px){
+    .info-grid{ grid-template-columns: 1fr; }
+    .info-item:nth-child(2n){ border-right: 1px solid var(--line); }
+    .info-item:nth-last-child(-n+2){ border-bottom: none; }
+    .info-item:last-child{ border-bottom: 1px solid var(--line); }
+    .gallery-grid{ grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scanlines"></div>
+
+<section class="hero">
+  <div class="sunburst"></div>
+
+  <div class="deco rocket-deco" aria-hidden="true">
+    <svg viewBox="0 0 100 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 5 C68 24 74 68 74 100 L26 100 C26 68 32 24 50 5 Z" stroke="var(--yellow)" stroke-width="3" stroke-linejoin="round"/>
+      <circle cx="50" cy="55" r="10" stroke="var(--orange)" stroke-width="3"/>
+      <path d="M26 92 L6 122 L26 112 Z" stroke="var(--yellow)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M74 92 L94 122 L74 112 Z" stroke="var(--yellow)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M40 100 L37 132 M50 100 L50 138 M60 100 L63 132" stroke="var(--orange)" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <div class="deco atom-deco atom-1" aria-hidden="true">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="6" fill="var(--yellow)"/>
+      <ellipse cx="50" cy="50" rx="45" ry="18" stroke="var(--yellow)" stroke-width="2.5"/>
+      <ellipse cx="50" cy="50" rx="45" ry="18" stroke="var(--orange)" stroke-width="2.5" transform="rotate(60 50 50)"/>
+      <ellipse cx="50" cy="50" rx="45" ry="18" stroke="var(--yellow-soft)" stroke-width="2.5" transform="rotate(120 50 50)"/>
+    </svg>
+  </div>
+
+  <div class="deco atom-deco atom-2" aria-hidden="true">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="6" fill="var(--orange)"/>
+      <ellipse cx="50" cy="50" rx="45" ry="18" stroke="var(--yellow)" stroke-width="2.5"/>
+      <ellipse cx="50" cy="50" rx="45" ry="18" stroke="var(--yellow-soft)" stroke-width="2.5" transform="rotate(60 50 50)"/>
+      <ellipse cx="50" cy="50" rx="45" ry="18" stroke="var(--orange)" stroke-width="2.5" transform="rotate(120 50 50)"/>
+    </svg>
+  </div>
+
+  <svg class="deco star-deco star-1" viewBox="0 0 24 24" fill="var(--yellow-soft)" aria-hidden="true">
+    <path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/>
+  </svg>
+  <svg class="deco star-deco star-2" viewBox="0 0 24 24" fill="var(--yellow)" aria-hidden="true">
+    <path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/>
+  </svg>
+  <svg class="deco star-deco star-3" viewBox="0 0 24 24" fill="var(--orange)" aria-hidden="true">
+    <path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/>
+  </svg>
+
+  <div class="frame-wrap">
+    <img src="face.png" alt="个人照片">
+  </div>
+
+  <h1 class="name">刘奶蛙</h1>
+  <p class="tagline">最爱大笑的黄色奶蛙</p>
+
+  <div class="info-grid">
+    <div class="info-item">
+      <div class="info-label">年龄</div>
+      <div class="info-value">18</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">性别</div>
+      <div class="info-value">奶蛙</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">最喜欢的颜色</div>
+      <div class="info-value">黄色</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">最喜欢的事情</div>
+      <div class="info-value">大笑</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">学院</div>
+      <div class="info-value">外国语学院</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">专业</div>
+      <div class="info-value">奶蛙语</div>
+    </div>
+  </div>
+
+  <p class="about">
+    我是刘奶蛙，今年 18 岁，来自外国语学院奶蛙语专业。
+    黄色是我最喜欢的颜色，大笑是我最喜欢的事情——
+    开心的时候会毫无保留地笑出声，希望这份快乐也能感染到你。
+  </p>
+
+  <div class="scroll-cue">
+    <span></span>
+    下滑查看我的写真
+  </div>
+</section>
+
+<section class="gallery">
+  <h2 class="gallery-title">我的写真</h2>
+  <p class="gallery-sub">— PHOTO DIARY —</p>
+
+  <div class="gallery-grid">
+    <div class="photo-card">
+      <figure>
+        <div class="photo-frame">
+          <img src="我的写真/我和朋友拥抱.png" alt="我和朋友拥抱">
+        </div>
+        <figcaption>我和朋友拥抱</figcaption>
+      </figure>
+    </div>
+
+    <div class="photo-card">
+      <figure>
+        <div class="photo-frame">
+          <img src="我的写真/我惊讶.png" alt="我惊讶">
+        </div>
+        <figcaption>我惊讶</figcaption>
+      </figure>
+    </div>
+
+    <div class="photo-card">
+      <figure>
+        <div class="photo-frame">
+          <img src="我的写真/我捧腹大笑.png" alt="我捧腹大笑">
+        </div>
+        <figcaption>我捧腹大笑</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
